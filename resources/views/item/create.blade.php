@@ -12,38 +12,38 @@
             <th class="haber">Haber</th>
         </tr>
         <tr>
-            <td class="fecha" data-col="0" data-row="0">
+            <td class="fecha">
             <input  class="" type="date" name="" id=""  value="{{$date}}" readonly>
             </td>
-            <td class="concepto" data-col="1" data-row="0">
+            <td class="concepto">
                 <select class="selectpicker my-2" data-live-search="true" data-width="100%" name="account1">
                     @foreach($accounts as $account)
                             <option value="{{$account->id}},{{$account->title}}">{{$account->id}} {{$account->title}}</option>  
                     @endforeach
                 </select>
             </td>
-            <td class="debe" data-col="2" data-row="0">
+            <td class="debe">
                 <input class="debe-input" type="number" name="debe1" id=""  min="0" step="0.01">
             </td>
-            <td class="haber" data-col="3" data-row="0">
+            <td class="haber">
                 <input class="haber-input" type="number" name="haber1" id=""  min="0" step="0.01">
             </td>
         </tr>
         <tr>
-            <td class="fecha" data-col="0" data-row="1">
+            <td class="fecha">
             <input  class="input-fecha" type="date" name="" id="" style="color: #f8f9fa;" readonly>
             </td>
-            <td class="concepto" data-col="1" data-row="1">
+            <td class="concepto">
                 <select class="selectpicker my-2" data-live-search="true" data-width="100%" name="account2">
                     @foreach($accounts as $account)
                             <option value="{{$account->id}},{{$account->title}}">{{$account->id}} {{$account->title}}</option>  
                     @endforeach
                 </select>
             </td>
-            <td class="debe" data-col="2" data-row="1">
+            <td class="debe">
                 <input class="debe-input" type="number" name="debe2" id=""  min="0" step="0.01">
             </td>
-            <td class="haber" data-col="3" data-row="1">
+            <td class="haber">
                 <input class="haber-input" type="number" name="haber2" id=""  min="0" step="0.01">
             </td>
         </tr>
@@ -55,16 +55,16 @@
             </td>
         </tr>
         <tr>
-            <td class="fecha invisible" data-col="0" data-row="0">
+            <td class="fecha invisible">
             <input  class="" type="date" name="" id="" readonly>
             </td>
-            <td class="concepto invisible" data-col="1" data-row="0">
+            <td class="concepto invisible">
                
             </td>
-            <td class="totales" data-col="2" data-row="0">
+            <td class="totales">
                 <input class="text-success" type="number" name="" id="total-debe"  min="0" value="0" step="0.01" readonly>
             </td>
-            <td class="totales" data-col="3" data-row="0">
+            <td class="totales">
                 <input class="text-success" type="number" name="" id="total-haber"  min="0" value="0" step="0.01" readonly>
             </td>
         </tr>
@@ -89,20 +89,20 @@ $(document).ready(function (){
         cont +=1
         $('#table').append(`
             <tr>
-                <td class="fecha" data-col="0" data-row="${cont}">
+                <td class="fecha">
                 <input  class="input-fecha" type="date" name="" id=""  style="color: #f8f9fa;" readonly>
                 </td>
-                <td class="concepto" data-col="1" data-row="${cont}">
+                <td class="concepto">
                     <select class="selectpicker my-2" data-live-search="true" data-width="100%" name="account${cont}">
                         @foreach($accounts as $account)
                                 <option value="{{$account->id}},{{$account->title}}">{{$account->id}} {{$account->title}}</option>  
                         @endforeach
                     </select>
                 </td>
-                <td class="debe" data-col="2" data-row="${cont}">
+                <td class="debe">
                     <input class="debe-input" type="number" name="debe${cont}" id=""  min="0"  step="0.01">
                 </td>
-                <td class="haber" data-col="3" data-row="${cont}">
+                <td class="haber">
                     <input class="haber-input" type="number" name="haber${cont}" id=""  min="0"  step="0.01">
                 </td>
             </tr>     

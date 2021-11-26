@@ -94,10 +94,15 @@ class ItemController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
+    {   
+        $item = Item::find($id);
+        $parts = Part::where('item_id',$id)->get();
+
         return view('item.edit',[
             'accounts' =>  Account::all(),
-            'date' => date('Y-m-d')
+            'date' => $item->date,
+            'item' => $item,
+            'parts' => $parts
         ]);
     }
 
