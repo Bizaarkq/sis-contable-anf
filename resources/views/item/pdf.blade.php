@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    {{-- <link href="{{ public_path('/css/pdf.css') }}" rel="stylesheet"> --}}
+
     <style>
 
         *,
@@ -75,7 +75,7 @@
 <body>
     <div class="" style="background-color: white; width:90%; margin:0 auto;">
         <h4 class="" style="text-align: center;font-size:20px;">LIBRO DIARIO</h4>
-        <table class="table table-bordered">
+        <table class="table table-bordered" style="page-break-after:always;">
             <thead>
               <tr style="background-color: #eee">
                 <th scope="col">FECHA</th>
@@ -132,12 +132,12 @@
             </tfoot>
         </table>
     </div>
-    <div class="my-4 p-4 rounded-3 shadow" style="background-color: white; width:90%;" id="mayorizacion">
+    <div class="" style="background-color: white; width:90%; margin:0 auto;">
         <h4 class="" style="text-align: center;font-size:20px;">LIBRO MAYOR</h4>
-        <div class=" row row-cols-1 row-cols-md-2 row-cols-lg-3 g-2 g-lg-3">
+        <div class="">
             @for ($i = 0; $i < count($ledger); $i++)
-                <div class="col">
-                    <table class="table table-bordered text-center" style="width: 90%; margin: 15px auto;">
+                <div class="">
+                    <table class="table table-bordered text-center" style="width: 60%; margin: 15px auto;">
                         <thead>
                             <tr class="table-light">
                                 <th colspan="2">{{$ledger[$i]['title']}}</th>
@@ -223,7 +223,7 @@
                 </div>
             @endfor
             <div class="col">
-                <table class="table table-bordered text-center" style="width: 90%; margin: 15px auto;">
+                <table class="table table-bordered text-center" style="width: 60%; margin: 15px auto;">
                     <thead>
                         <tr class="table-light">
                             <th colspan="2">{{$adjustment['title']}}</th>

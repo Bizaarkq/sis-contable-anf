@@ -95,7 +95,10 @@ class ItemController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view('item.edit',[
+            'accounts' =>  Account::all(),
+            'date' => date('Y-m-d')
+        ]);
     }
 
     /**
@@ -118,7 +121,9 @@ class ItemController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $Item = Item::find($id);
+        $Item->delete();
+        return redirect()->back();
     }
     
     public function setMonthJournalBook(Request $request){

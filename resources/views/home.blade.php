@@ -8,7 +8,7 @@
         </div>
         <div class="col-12 col-md-4 col-lg-3 col-xxl-2 d-flex justify-content-center">
             <a type="submit" class="btn btn-primary mt-5 p-4 border-0 shadow rounded-3" href="item/create">
-                <h5 class="fs-3">Iniciar partida</h5>
+                <h5 class="fs-3">Agregar partida</h5>
                 <i class="fas fa-folder-plus mt-2" style="font-size:50px;"></i>
             </a>
         </div>

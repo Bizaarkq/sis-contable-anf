@@ -25,7 +25,16 @@
             @foreach($items as $item)
                 <tr class="bg-light">
                     <th>{{$item->date}}</th>
-                    <th colspan="3">PARTIDA X{{$cont}}</th>
+                    <th colspan="3">PARTIDA X{{$cont}} 
+                        
+                        <a href="{{route('item.edit',$item->id)}}" class="px-1 py-0  text-primary btn"><i class="fas fa-pen"></i></a> 
+                        
+                        <form action="/item/{{$item->id}}" method="POST" style="display: inline-block">
+                            @csrf
+                            @method('delete')
+                            <button class="px-1 py-0 btn text-danger " type="submit" onclick="return confirm('Esta seguro?')"><i class="fas fa-trash"></i></button>
+                        </form>
+                    </th>
                 </tr>
                 @foreach($parts as $part)
                     @if($part->item_id == $item->id)
@@ -88,6 +97,7 @@
 @section('js')
 <script>
     $('.selectpicker').selectpicker('render')
+
 </script>
 @endsection
 
