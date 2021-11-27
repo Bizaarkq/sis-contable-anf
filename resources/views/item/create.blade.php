@@ -119,11 +119,11 @@ $(document).ready(function (){
             let n1 = $("#table").find("tr:last").find(".haber-input").val()
 
             if($('#total-debe').val() > 0){
-                $('#total-debe').val(parseFloat($('#total-debe').val())-parseFloat(n))
+                $('#total-debe').val(parseFloat($('#total-debe').val())-parseFloat("0"+n))
             }
 
             if($('#total-haber').val() > 0){
-                $('#total-haber').val(parseFloat($('#total-haber').val())-parseFloat(n1))
+                $('#total-haber').val(parseFloat($('#total-haber').val())-parseFloat("0"+n1))
             }
             correctbalance()
             $("#table").find("tr:last").remove()
@@ -176,6 +176,11 @@ $(document).ready(function (){
             }
             if (Number.isNaN(haber)) {
                 $(`input[name=haber${i}]`).val(0)
+            }
+
+            if(debe > 0 && haber > 0){
+                $('.error').text('Cada cuenta debe tener un valor en debe o haber, no en ambos')
+                event.preventDefault()
             }
         }
 

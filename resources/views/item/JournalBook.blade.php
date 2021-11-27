@@ -32,7 +32,7 @@
                         <form action="/item/{{$item->id}}" method="POST" style="display: inline-block">
                             @csrf
                             @method('delete')
-                            <button class="px-1 py-0 btn text-danger " type="submit" onclick="return confirm('Esta seguro?')"><i class="fas fa-trash"></i></button>
+                            <button class="px-1 py-0 btn text-danger " type="submit" onclick="return confirm('Esta seguro de eliminar esta partida?')"><i class="fas fa-trash"></i></button>
                         </form>
                     </th>
                 </tr>

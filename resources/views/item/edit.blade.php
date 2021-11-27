@@ -2,8 +2,9 @@
 
 @section('content')
 
-<form class="partida shadow rounded-3" action="/item" method="post" name="item">
+<form class="partida shadow rounded-3" action="/item/{{$item->id}}" method="post" name="item">
     @csrf
+    @method('put')
     <table class="" id="table">
         <tr class="">
             <th class="fecha"></th>
@@ -15,7 +16,7 @@
             <tr>
                 @if($i == 0)
                     <td class="fecha">
-                        <input  class="" type="date" name="" id=""  value="{{$date}}" >
+                        <input  class="" type="date" name="date" id=""  value="{{$date}}" >
                     </td>
                 @else
                     <td class="fecha">
@@ -23,7 +24,7 @@
                     </td>
                 @endif
                 <td class="concepto">
-                    <select class="selectpicker my-2" data-live-search="true" data-width="100%" name="account1">
+                    <select class="selectpicker my-2" data-live-search="true" data-width="100%" name="account{{$i+1}}">
                         @foreach($accounts as $account)
                                 @if ($account->id == $parts[$i]->account_id)
                                 <option value="{{$account->id}},{{$account->title}}" selected>{{$account->id}} {{$account->title}}</option> 
@@ -36,16 +37,16 @@
                 </td>
                 <td class="debe">
                     @if($parts[$i]->debit >0)
-                        <input class="debe-input" type="number" name="debe1" id=""  min="0" step="0.01" value="{{$parts[$i]->debit}}">
+                        <input class="debe-input" type="number" name="debe{{$i+1}}" id=""  min="0" step="0.01" value="{{$parts[$i]->debit}}">
                     @else
-                        <input class="debe-input" type="number" name="debe1" id=""  min="0" step="0.01">   
+                        <input class="debe-input" type="number" name="debe{{$i+1}}" id=""  min="0" step="0.01">   
                     @endif
                 </td>
                 <td class="haber">
                     @if($parts[$i]->credit >0)
-                        <input class="haber-input" type="number" name="haber1" id=""  min="0" step="0.01" value="{{$parts[$i]->credit}}">
+                        <input class="haber-input" type="number" name="haber{{$i+1}}" id=""  min="0" step="0.01" value="{{$parts[$i]->credit}}">
                     @else
-                        <input class="haber-input" type="number" name="haber1" id=""  min="0" step="0.01">   
+                        <input class="haber-input" type="number" name="haber{{$i+1}}" id=""  min="0" step="0.01">   
                     @endif
                 </td>
             </tr>
@@ -74,7 +75,7 @@
     </table>
     <div class="div-botones mt-3">
         <button id="plus" class="btn btn-primary rounded-circle mx-2 shadow btnAdd" type="button"  data-bs-toggle="tooltip" data-bs-placement="top" title="Agregar cuenta"><i class="fas fa-plus"></i></button>
-        <button id="check" class="btn btn-success rounded-circle mx-2 shadow btnAdd" type="submit"  data-bs-toggle="tooltip" data-bs-placement="top" title="Guardar partida"><i class="fas fa-check"></i></button>
+        <button id="check" class="btn btn-success rounded-circle mx-2 shadow btnAdd" type="submit"  data-bs-toggle="tooltip" data-bs-placement="top" title="Actualizar partida"><i class="fas fa-check-double"></i></button>
         <button id="minus" class="btn btn-primary rounded-circle mx-2 shadow btnAdd" type="button"  data-bs-toggle="tooltip" data-bs-placement="top" title="Quitar cuenta"><i class="fas fa-minus"></i></button>
     </div>
     <div class="error text-danger text-center mt-3" style="font-weight: 500;"></div>
@@ -83,13 +84,38 @@
 @section('js')
 <script> 
 
+let cont = <?php echo count($parts); ?>
+
 $(document).ready(function (){
 
     $('.selectpicker').selectpicker('render')
-    let cont = 2
+    
+    let sumadebe = 0
+    let sumahaber = 0
+
+    for (let i = 1; i <= cont; i++) {
+
+        let debe = parseFloat($(`input[name=debe${i}]`).val())
+        let haber = parseFloat($(`input[name=haber${i}]`).val()) 
+
+        if (Number.isNaN(debe)) {
+            debe = 0
+        }
+        if (Number.isNaN(haber)) {
+            haber = 0    
+        }  
+
+        sumadebe += debe
+        sumahaber += haber   
+    }
+
+    $('#total-debe').val(sumadebe)
+    $('#total-haber').val(sumahaber)
+    
 
     $("#plus").click(function() {
         cont +=1
+        console.log(cont)
         $('#table').append(`
             <tr>
                 <td class="fecha">
@@ -122,11 +148,12 @@ $(document).ready(function (){
             let n1 = $("#table").find("tr:last").find(".haber-input").val()
 
             if($('#total-debe').val() > 0){
-                $('#total-debe').val(parseFloat($('#total-debe').val())-parseFloat(n))
+                $('#total-debe').val(parseFloat($('#total-debe').val())-parseFloat("0"+n))
             }
 
             if($('#total-haber').val() > 0){
-                $('#total-haber').val(parseFloat($('#total-haber').val())-parseFloat(n1))
+                $('#total-haber').val(parseFloat($('#total-haber').val())-parseFloat("0"+n1))
+                console.log($('#total-haber').val())
             }
             correctbalance()
             $("#table").find("tr:last").remove()
@@ -179,6 +206,11 @@ $(document).ready(function (){
             }
             if (Number.isNaN(haber)) {
                 $(`input[name=haber${i}]`).val(0)
+            }
+
+            if(debe > 0 && haber > 0){
+                $('.error').text('Cada cuenta debe tener un valor en debe o haber, no en ambos')
+                event.preventDefault()
             }
         }
 

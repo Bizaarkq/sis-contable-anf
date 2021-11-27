@@ -73,7 +73,7 @@ class ItemController extends Controller
             $part->save();
         }
 
-        return redirect('/item/create');
+        return redirect('/home');
     }
 
     /**
@@ -115,7 +115,32 @@ class ItemController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $parts = Part::where('item_id',$id)->delete();
+        
+        $n = count($request->request)-3;
+        $n = $n/3;
+        
+        $item = Item::find($id);
+        $item->description = $request->description;
+        $item->date = $request->date;
+        $item->save();
+    
+        for ($i=1; $i <= $n; $i++) { 
+            $account = "account".$i;
+            $debit = "debe".$i;
+            $credit = "haber".$i;
+            $data = explode(",",$request->$account); 
+
+            $part = new Part();
+            $part->account_id = $data[0];
+            $part->account_title = $data[1];
+            $part->debit = $request->$debit;
+            $part->credit = $request->$credit;
+            $part->item_id = $id;
+            $part->save();
+        }
+
+        return redirect('/home');
     }
 
     /**
@@ -127,6 +152,7 @@ class ItemController extends Controller
     public function destroy($id)
     {
         $Item = Item::find($id);
+        $parts = Part::where('item_id',$id)->delete();
         $Item->delete();
         return redirect()->back();
     }
@@ -136,7 +162,7 @@ class ItemController extends Controller
     }
 
     public function JournalBook($month){
-        $items = Item::whereMonth('date',$month)->get();
+        $items = Item::whereMonth('date',$month)->orderby('date')->get();
         $parts = Part::all();
         /* foreach ($items as $item) {
             $part = Part::where('item_id','=',$item->id)->get();
