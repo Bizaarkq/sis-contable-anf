@@ -33,7 +33,6 @@ class ItemController extends Controller
      */
     public function create()
     {
-        
         return view('item.create',[
             'accounts' =>  Account::all(),
             'date' => date('Y-m-d')

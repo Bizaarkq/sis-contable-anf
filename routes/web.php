@@ -34,6 +34,6 @@ Route::get('/item/{month}/pdf','ItemController@pdf');
 Route::resource('/item','ItemController'); 
 //rutas user
 Route::resource('/user','UserController'); 
-
-
-
+//rutas cost
+Route::get('/cost/generate','CostController@generate');
+Route::resource('/cost','CostController');
