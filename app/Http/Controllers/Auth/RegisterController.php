@@ -38,8 +38,8 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
-        //$this->middleware('auth');
+        //$this->middleware('guest');
+        $this->middleware('auth');
     }
 
     /**
@@ -70,7 +70,8 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'username' => $data['username'],
             'password' => Hash::make($data['password']),
-            'type' => $data['type']
+            'type' => $data['type'],
+            'active' => 1
         ]);
     }
 }

@@ -8,7 +8,7 @@
         <div class="card border-0 shadow rounded-3 my-5">
           <div class="card-body p-4 p-sm-5">
             <h5 class="card-title text-center mb-5  fs-3">Registrar Usuario</h5>
-            <form method="POST" action="{{ route('register') }}">
+            <form method="POST" action="{{ route('user.store') }}">
                 @csrf
                 <div class="form-floating mb-3">
                     <input id="floatingInput" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required placeholder="Nombre">

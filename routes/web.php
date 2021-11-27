@@ -31,8 +31,12 @@ Route::get('/item/{month}/JournalBook','ItemController@JournalBook');
 Route::get('/item/{month}/allDocuments','ItemController@allDocuments');
 Route::post('/item/setMonthJournalBook','ItemController@setMonthJournalBook');
 Route::get('/item/{month}/pdf','ItemController@pdf');
-Route::resource('/item','ItemController');
-
+Route::resource('/item','ItemController'); 
+//rutas user
+Route::put('/user/activeUpdate/{user}','UserController@activeUpdate');
+Route::put('/user/roleUpdate/{user}','UserController@roleUpdate');
+Route::resource('/user','UserController'); 
+//rutas cost
 Route::get('/cost/generate','CostController@generate');
 Route::post('/cost/resultados','CostController@result')->name("resultados");
 Route::resource('/cost','CostController');
