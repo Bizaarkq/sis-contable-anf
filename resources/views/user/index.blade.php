@@ -1,8 +1,8 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
-    <a class="btn btn-dark" href="/register" >Agregar Usuario</a>
-    <div class="card my-3 p-2 p-md-5">
+    <a class="btn btn-dark shadow" href="/user/create" >Agregar Usuario</a>
+    <div class="card my-3 p-2 p-md-5 shadow">
         <table class="table table-bordered table-responsive display nowrap" id="users" class="display"  cellspacing="0" style="width:100%;">
             <thead>
                 <tr>
@@ -32,14 +32,22 @@
                                 Action
                                 </button>
                                 <ul class="dropdown-menu" style="min-width:5rem;">
-                                    {{-- <li><a class="dropdown-item text-primary" href="user/{{$user->id}}"><i class="far fa-eye me-1"></i>Details</a></li> --}}
+                                    <form action="/user/activeUpdate/{{$user->id}}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        @if ($user->active == 1)
+                                            <button class="dropdown-item text-danger" type="submit" onclick="return confirm('Esta seguro de desactivar este usuario?')">Desactivar</button>
+                                        @else
+                                            <button class="dropdown-item text-danger" type="submit" onclick="return confirm('Esta seguro de activar este usuario?')">Activar</button>    
+                                        @endif
+                                    </form>
                                     <form action="/user/roleUpdate/{{$user->id}}" method="POST">
                                         @csrf
                                         @method('PUT')
                                         @if ($user->type == 1)
-                                            <button class="dropdown-item text-warning" type="submit" onclick="return confirm('Are you sure to demote the admin?')">Degradar</button>
+                                            <button class="dropdown-item text-warning" type="submit" onclick="return confirm('Esta seguro de degradarlo a usuario?')">Degradar</button>
                                         @else
-                                            <button class="dropdown-item text-warning" type="submit" onclick="return confirm('Are you sure to promote the user?')">Promover</button>    
+                                            <button class="dropdown-item text-warning" type="submit" onclick="return confirm('Esta seguro de promoverlo a administrador?')">Promover</button>    
                                         @endif
                                     </form>
                                 </ul>

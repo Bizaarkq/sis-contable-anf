@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -26,7 +27,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('user.create');
     }
 
     /**
@@ -37,7 +38,22 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'name' => ['required', 'string','min:3','max:255'],
+            'username' => ['required', 'string', 'max:255','unique:users'],
+            'password' => ['required', 'string', 'min:5'],
+            'type' => ['required'],
+        ]);
+
+        User::create([
+            'name' => $data['name'],
+            'username' => $data['username'],
+            'password' => Hash::make($data['password']),
+            'type' => $data['type'],
+            'active' => 1
+        ]);
+
+        return redirect('/user');
     }
 
     /**
@@ -84,4 +100,33 @@ class UserController extends Controller
     {
         //
     }
+
+    public function roleUpdate($id){
+        $user = User::find($id);
+
+        if($user->type == 1){
+            $user->type = 0;
+        }
+        else{
+            $user->type = 1;
+        }
+
+        $user->save();
+        return redirect()->back();
+    }
+
+    public function activeUpdate($id){
+        $user = User::find($id);
+
+        if($user->active == 1){
+            $user->active = 0;
+        }
+        else{
+            $user->active = 1;
+        }
+
+        $user->save();
+        return redirect()->back();
+    }
+
 }

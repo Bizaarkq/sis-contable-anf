@@ -33,6 +33,8 @@ Route::post('/item/setMonthJournalBook','ItemController@setMonthJournalBook');
 Route::get('/item/{month}/pdf','ItemController@pdf');
 Route::resource('/item','ItemController'); 
 //rutas user
+Route::put('/user/activeUpdate/{user}','UserController@activeUpdate');
+Route::put('/user/roleUpdate/{user}','UserController@roleUpdate');
 Route::resource('/user','UserController'); 
 //rutas cost
 Route::get('/cost/generate','CostController@generate');
