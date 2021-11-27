@@ -34,4 +34,5 @@ Route::get('/item/{month}/pdf','ItemController@pdf');
 Route::resource('/item','ItemController');
 
 Route::get('/cost/generate','CostController@generate');
+Route::post('/cost/resultados','CostController@result')->name("resultados");
 Route::resource('/cost','CostController');
