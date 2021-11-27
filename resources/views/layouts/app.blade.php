@@ -49,6 +49,9 @@
                         Documentos Contables
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                        @if(Auth::user()->type == 1)
+                        <li><a class="dropdown-item" href="/item">Detalles de Partidas</a></li>        
+                        @endif
                         <li><a class="dropdown-item" href="/item/create">Agregar Partida</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="/item/{{$month}}/JournalBook">Libro diario</a></li>
