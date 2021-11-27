@@ -53,7 +53,7 @@
                 <tr>
                     <td>{{$item->id}}</td>
                     <td>{{$item->description}}</td>
-                    <td>{{$item->amount}}</td>
+                    <td>${{$item->amount}}</td>
                     <td>{{$item->element}}</td>
                     <td>
                         <form action="/cost/{{$item->id}}" method="POST" style="display: inline-block">
