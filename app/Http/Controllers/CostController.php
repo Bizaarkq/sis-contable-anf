@@ -95,6 +95,67 @@ class CostController extends Controller
 
     public function generate()
     {
-        return view('costs.generateCost');
+        return view('costs.generateCost',[
+            'porciento' => "0",
+            'MD' => "?",
+            'MOD' => "?",
+            'CIF' => "?",
+            'CDA' => "?",
+            'CTP' => "?",
+            'CP' => "?",
+            'CC' => "?",
+            'costosPeriodo' =>"?",
+            'producido' => "?",
+            'costoUni' => "?",
+            'precioVenta' => "?",
+            'precioIva' => "?"
+        ]);
+    }
+
+    public function result(Request $request)
+    {
+        $costos = cost::all();
+        $MD = 0;
+        $MOD = 0;
+        $CIF = 0;
+        $CDA = 0;
+        foreach($costos as $costo) {
+            if($costo->element == "MD"){
+                $MD += $costo->amount;
+            }elseif($costo->element == "MOD"){
+                $MOD += $costo->amount;
+            }elseif($costo->element == "CIF"){
+                $CIF += $costo->amount;
+            }elseif($costo->element == "CDA"){
+                $CDA += $costo->amount;
+            }
+        }
+
+        $CTP = $MD + $MOD + $CIF;
+        $CP = $MD + $MOD;
+        $CC = $MOD + $CIF;
+        $costosPeriodo = $CDA;
+        $producido = $request->cantidad;
+        $costoUni = $CTP / $producido;
+        $precioVenta = $costoUni + ($costoUni * ($request->porcentaje / 100));
+        $precioVenta = round($precioVenta , 2);
+        $precioIva = $precioVenta * 1.13;
+        $precioIva = round($precioIva , 2);
+
+        return view('costs.generateCost',[
+            'porciento' => $request->porcentaje,
+            'MD' => $MD,
+            'MOD' => $MOD,
+            'CIF' => $CIF,
+            'CDA' => $CDA,
+            'CTP' => $CTP,
+            'CP' => $CP,
+            'CC' => $CC,
+            'costosPeriodo' => $costosPeriodo,
+            'producido' => $producido,
+            'costoUni' => $costoUni,
+            'precioVenta' => $precioVenta,
+            'precioIva' => $precioIva,
+        ]);
     }
 }

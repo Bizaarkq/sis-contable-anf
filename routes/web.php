@@ -38,4 +38,5 @@ Route::put('/user/roleUpdate/{user}','UserController@roleUpdate');
 Route::resource('/user','UserController'); 
 //rutas cost
 Route::get('/cost/generate','CostController@generate');
+Route::post('/cost/resultados','CostController@result')->name("resultados");
 Route::resource('/cost','CostController');

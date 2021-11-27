@@ -26,7 +26,7 @@
                 </select>
             </td>
             <td>
-                <button class="" style="Background-color: transparent; font-size: 2.2rem; color: Dodgerblue; border-style: none;" type="submit"  title="Guardar costo"><i class="fas fa-plus-circle"></i></button>
+                <button style="Background-color: transparent; font-size: 2.2rem; color: Dodgerblue; border-style: none;" type="submit"  title="Guardar costo"><i class="fas fa-plus-circle"></i></button>
             </td>
         </tr>
     </table>
