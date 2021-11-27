@@ -32,6 +32,8 @@ Route::get('/item/{month}/allDocuments','ItemController@allDocuments');
 Route::post('/item/setMonthJournalBook','ItemController@setMonthJournalBook');
 Route::get('/item/{month}/pdf','ItemController@pdf');
 Route::resource('/item','ItemController'); 
+//rutas user
+Route::resource('/user','UserController'); 
 
 
 

@@ -80,12 +80,12 @@
 <form action="/item/setMonthJournalBook" method="post" class="shadow rounded-3 d-flex flex-column align-items-center p-4" style="background-color: white;">
     @csrf
     <h5 class="my-3">Eliga el mes del cual desea obtener el libro diario</h5>
-    <select name="month" class="selectpicker my-3" data-width="90%" id="">
+    <select name="month" class="selectpicker my-3" data-width="90%" id="" onchange="this.form.submit()">
         @for ($i = 0; $i < $currentmonth; $i++)
         <option value="{{$i+1}}">{{$months[$i]}}</option> 
         @endfor
     </select>
-    <button class="btn btn-primary" type="submit">Obtener</button>
+    {{-- <button class="btn btn-primary" type="submit">Obtener</button> --}}
 </form>
 {{-- <form action="/item/pdf" method="">
     @csrf
