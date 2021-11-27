@@ -31,7 +31,7 @@ Route::get('/item/{month}/JournalBook','ItemController@JournalBook');
 Route::get('/item/{month}/allDocuments','ItemController@allDocuments');
 Route::post('/item/setMonthJournalBook','ItemController@setMonthJournalBook');
 Route::get('/item/{month}/pdf','ItemController@pdf');
-Route::resource('/item','ItemController'); 
+Route::resource('/item','ItemController');
 
-
-
+Route::get('/cost/generate','CostController@generate');
+Route::resource('/cost','CostController');
