@@ -8,6 +8,7 @@ use App\Account;
 use App\Part;
 use App\Item;
 use PDF;
+use Auth;
 
 
 class ItemController extends Controller
@@ -23,7 +24,9 @@ class ItemController extends Controller
      */
     public function index()
     {   
-
+        return view('item.index',[
+            'items' => Item::orderby('date')->get()
+        ]);
     }
 
     /**
@@ -53,6 +56,8 @@ class ItemController extends Controller
         $item = new Item();
         $item->description = $request->description;
         $item->date = date('Y-m-d');
+        $item->created_by = Auth::user()->username;
+        $item->updated_by = Auth::user()->username;
         $item->save();
 
         $id = $item->all()->last()->id;
@@ -122,6 +127,7 @@ class ItemController extends Controller
         $item = Item::find($id);
         $item->description = $request->description;
         $item->date = $request->date;
+        $item->updated_by = Auth::user()->username;
         $item->save();
     
         for ($i=1; $i <= $n; $i++) { 
