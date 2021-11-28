@@ -103,18 +103,18 @@ class CostController extends Controller
     {
         return view('costs.generateCost',[
             'porciento' => "0",
-            'MD' => "?",
-            'MOD' => "?",
-            'CIF' => "?",
-            'CDA' => "?",
-            'CTP' => "?",
-            'CP' => "?",
-            'CC' => "?",
-            'costosPeriodo' =>"?",
+            'MD' => "0",
+            'MOD' => "0",
+            'CIF' => "0",
+            'CDA' => "0",
+            'CTP' => "0",
+            'CP' => "0",
+            'CC' => "0",
+            'costosPeriodo' =>"0",
             'producido' => "?",
-            'costoUni' => "?",
-            'precioVenta' => "?",
-            'precioIva' => "?"
+            'costoUni' => "0",
+            'precioVenta' => "0",
+            'precioIva' => "0"
         ]);
     }
 

@@ -37,7 +37,7 @@
                 </tr>
                 <tr>
                     <th scope="row">CP -  Costos primos</th>
-                    <td>4{{$CP}}</td>
+                    <td>${{$CP}}</td>
                 </tr>
                 <tr>
                     <th scope="row">CC - Costos de conversion</th>
