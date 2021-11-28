@@ -65,7 +65,7 @@ class CostController extends Controller
      */
     public function edit($id)
     {
-        //
+
     }
 
     /**
@@ -75,9 +75,15 @@ class CostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $Item = cost::find($request->idEdit);
+        $Item->description = $request->descripcionEdit;
+        $Item->amount = $request->montoEdit;
+        $Item->element = $request->elementEdit;
+        $Item->save();
+
+        return redirect('/cost/create');
     }
 
     /**
@@ -97,18 +103,18 @@ class CostController extends Controller
     {
         return view('costs.generateCost',[
             'porciento' => "0",
-            'MD' => "?",
-            'MOD' => "?",
-            'CIF' => "?",
-            'CDA' => "?",
-            'CTP' => "?",
-            'CP' => "?",
-            'CC' => "?",
-            'costosPeriodo' =>"?",
+            'MD' => "0",
+            'MOD' => "0",
+            'CIF' => "0",
+            'CDA' => "0",
+            'CTP' => "0",
+            'CP' => "0",
+            'CC' => "0",
+            'costosPeriodo' =>"0",
             'producido' => "?",
-            'costoUni' => "?",
-            'precioVenta' => "?",
-            'precioIva' => "?"
+            'costoUni' => "0",
+            'precioVenta' => "0",
+            'precioIva' => "0"
         ]);
     }
 
