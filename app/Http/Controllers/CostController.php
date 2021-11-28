@@ -65,7 +65,7 @@ class CostController extends Controller
      */
     public function edit($id)
     {
-        //
+
     }
 
     /**
@@ -75,9 +75,15 @@ class CostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $Item = cost::find($request->idEdit);
+        $Item->description = $request->descripcionEdit;
+        $Item->amount = $request->montoEdit;
+        $Item->element = $request->elementEdit;
+        $Item->save();
+
+        return redirect('/cost/create');
     }
 
     /**

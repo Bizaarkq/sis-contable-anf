@@ -21,31 +21,31 @@
             <tbody>
                 <tr>
                     <th scope="row">MD - Materiales directos</th>
-                    <td>{{$MD}}</td>
+                    <td>${{$MD}}</td>
                 </tr>
                 <tr>
                     <th scope="row">MOD - Mano de obra directa</th>
-                    <td>{{$MOD}}</td>
+                    <td>${{$MOD}}</td>
                 </tr>
                 <tr>
                     <th scope="row">CIF - Costos indirectos de fabricacion</th>
-                    <td>{{$CIF}}</td>
+                    <td>${{$CIF}}</td>
                 </tr>
                 <tr>
                     <th scope="row">CTP - Costos de produccion</th>
-                    <td>{{$CTP}}</td>
+                    <td>${{$CTP}}</td>
                 </tr>
                 <tr>
                     <th scope="row">CP -  Costos primos</th>
-                    <td>{{$CP}}</td>
+                    <td>4{{$CP}}</td>
                 </tr>
                 <tr>
                     <th scope="row">CC - Costos de conversion</th>
-                    <td>{{$CC}}</td>
+                    <td>${{$CC}}</td>
                 </tr>
                 <tr>
                     <th scope="row">Costos de perido</th>
-                    <td>{{$costosPeriodo}}</td>
+                    <td>${{$costosPeriodo}}</td>
                 </tr>
                 <tr>
                     <th scope="row">Porcentaje de utilidad</th>
@@ -57,15 +57,15 @@
                 </tr>
                 <tr>
                     <th scope="row">Costo unitario</th>
-                    <td>{{$costoUni}}</td>
+                    <td>${{$costoUni}}</td>
                 </tr>
                 <tr>
                     <th scope="row">Precio de venta</th>
-                    <td>{{$precioVenta}}</td>
+                    <td>${{$precioVenta}}</td>
                 </tr>
                 <tr>
-                    <th scope="row">Precio de vanta + IVA</th>
-                    <td>{{$precioIva}}</td>
+                    <th scope="row">Precio de venta + IVA</th>
+                    <td>${{$precioIva}}</td>
                 </tr>
             </tbody>
         </table>
