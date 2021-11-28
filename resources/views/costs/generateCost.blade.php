@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="partida shadow rounded-3">
-    <form class="d-flex flex-row w-100" action="resultados" method="post">
+    <form class="d-flex flex-row w-100" action="costo.resultados" method="post">
         @csrf
         <div class="w-25 me-4">
             <p class="fw-bold text-center">Porcentaje de utilidad</p>

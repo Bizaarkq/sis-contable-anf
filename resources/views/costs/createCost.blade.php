@@ -63,61 +63,8 @@
                         </form>
 
                         <!-- Button trigger modal -->
-                        <button class="px-1 py-0 btn text-secondary " type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-pen"></i></button>
+                        <a href="/cost/{{{$item->id}}}/edit" class="px-1 py-0 btn text-secondary " type="button"><i class="fas fa-pen"></i></a>
                         
-                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                              <div class="modal-content">
-                                <div class="modal-header">
-                                  <h5 class="modal-title" id="exampleModalLabel">Editar registro de costo</h5>
-                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                
-                                    <form class="d-flex flex-row w-100" action="cost.update" method="post">
-                                        @csrf
-                                        @method('put')
-                                        <table>
-                                        <tr>
-                                            <th class="text-dark" >ID</th>
-                                            <td>
-                                            <input class="descripcion-input mt-2" type="text" name="idEdit" value="{{$item->id}}" readonly>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <th class="text-dark">Descripción &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</th>
-                                            <td>
-                                            <input class="descripcion-input mt-2" type="text" name="descripcionEdit" value="{{$item->description}}">
-                                            </td>
-                                        </tr>
-                                            <tr>
-                                                <th class="text-dark">Monto</th>
-                                                <td>
-                                                    <input class="mt-2" type="number" name="montoEdit" min="0" step="0.01" value="{{$item->amount}}">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th class="text-dark">Elemento</th>
-                                                <td>
-                                                    <select class="selectpicker my-2" data-live-search="true" data-width="100%" name="elementEdit">
-                                                    <option value="MD">Materiales Directos</option>  
-                                                    <option value="MOD">Mano de Obra Directa</option>  
-                                                    <option value="CIF">Costos Indirectos de Frabricacion</option>  
-                                                    <option value="CDA">Costos de ventas generales y administrativos</option>  
-                                                    </select>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                </div>
-                                <div class="modal-footer">
-                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                                  <button type="submit" class="btn btn-primary">Guardar cambios</button>
-                                </div>
-                                </form>
-                              </div>
-                            </div>
-                          </div>
                     </td>
                 </tr>   
                 @endforeach
