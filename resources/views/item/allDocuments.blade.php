@@ -76,7 +76,11 @@
                             @if ($ledger[$i]['totalcredits'] == 0)
                                 <td>{{number_format($ledger[$i]['totaldebits'],2,".",",")}}</td>
                                 <td style="color: white;">---</td>    
-                            @endif 
+                            @endif
+                            @if ($ledger[$i]['totaldebits'] != 0 && $ledger[$i]['totalcredits'] != 0)
+                                <td>{{number_format($ledger[$i]['totaldebits'],2,".",",")}}</td>
+                                <td>{{number_format($ledger[$i]['totalcredits'],2,".",",")}}</td>
+                            @endif
                         </tr>
                         <tr class="table-light">
                             @if($ledger[$i]['totaldebits'] > $ledger[$i]['totalcredits'])
@@ -135,9 +139,11 @@
                 <th colspan="3" class="table-light">ACTIVO</th>
             </tr>
             @if(empty($checkingBalance['asset']))
-                <td style="color: white;">---</td>
-                <td style="color: white;">---</td>
-                <td style="color: white;">---</td>
+                <tr>
+                    <td style="color: white;">---</td>
+                    <td style="color: white;">---</td>
+                    <td style="color: white;">---</td>
+                </tr>
             @else
                 @foreach ($checkingBalance['asset'] as $asset)
                 <tr>
@@ -156,9 +162,11 @@
                 <th colspan="3" class="table-light">PASIVO</th>
             </tr>
             @if(empty($checkingBalance['liability']))
-                <td style="color: white;">---</td>
-                <td style="color: white;">---</td>
-                <td style="color: white;">---</td>
+                <tr>
+                    <td style="color: white;">---</td>
+                    <td style="color: white;">---</td>
+                    <td style="color: white;">---</td>
+                </tr>
             @else
                 @foreach ($checkingBalance['liability'] as $liability)
                 <tr>
@@ -177,9 +185,11 @@
                 <th colspan="3" class="table-light">CAPITAL</th>
             </tr>
             @if(empty($checkingBalance['capital']))
-                <td style="color: white;">---</td>
-                <td style="color: white;">---</td>
-                <td style="color: white;">---</td>
+                <tr>
+                    <td style="color: white;">---</td>
+                    <td style="color: white;">---</td>
+                    <td style="color: white;">---</td>
+                </tr>
             @else
                 @foreach ($checkingBalance['capital'] as $capital)
                 <tr>
@@ -198,9 +208,11 @@
                 <th colspan="3" class="table-light">INGRESOS</th>
             </tr>
             @if(empty($checkingBalance['earnings']))
-                <td style="color: white;">---</td>
-                <td style="color: white;">---</td>
-                <td style="color: white;">---</td>
+                <tr>
+                    <td style="color: white;">---</td>
+                    <td style="color: white;">---</td>
+                    <td style="color: white;">---</td>
+                </tr>
             @else
                 @foreach ($checkingBalance['earnings'] as $earning)
                 <tr>
@@ -219,9 +231,11 @@
                 <th colspan="3" class="table-light">COSTOS</th>
             </tr>
             @if(empty($checkingBalance['costs']))
-                <td style="color: white;">---</td>
-                <td style="color: white;">---</td>
-                <td style="color: white;">---</td>
+                <tr>
+                    <td style="color: white;">---</td>
+                    <td style="color: white;">---</td>
+                    <td style="color: white;">---</td>
+                </tr>
             @else
                 @foreach ($checkingBalance['costs'] as $cost)
                 <tr>
@@ -240,9 +254,11 @@
                 <th colspan="3" class="table-light">GASTOS</th>
             </tr>
             @if(empty($checkingBalance['expenses']))
-                <td style="color: white;">---</td>
-                <td style="color: white;">---</td>
-                <td style="color: white;">---</td>
+                <tr>
+                    <td style="color: white;">---</td>
+                    <td style="color: white;">---</td>
+                    <td style="color: white;">---</td>
+                </tr>
             @else
                 @foreach ($checkingBalance['expenses'] as $expense)
                 <tr>

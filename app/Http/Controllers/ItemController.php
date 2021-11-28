@@ -77,7 +77,7 @@ class ItemController extends Controller
             $part->save();
         }
 
-        return redirect('/home');
+        return redirect('/item/create');
     }
 
     /**
@@ -145,7 +145,9 @@ class ItemController extends Controller
             $part->save();
         }
 
-        return redirect('/home');
+        $month = date('m', strtotime($request->date));
+
+        return redirect('/item/'.$month.'/JournalBook');
     }
 
     /**
@@ -293,7 +295,7 @@ class ItemController extends Controller
                     array_push($checkingBalance['earnings'],$heading);
                 }
                 if(substr($heading['id'],0,2)=='41'){
-                    array_push($checkingBalance['costos'],$heading);
+                    array_push($checkingBalance['costs'],$heading);
                 }
                 if(substr($heading['id'],0,2)=='42'){
                     array_push($checkingBalance['expenses'],$heading);
@@ -452,12 +454,18 @@ class ItemController extends Controller
         $parts = Part::all();
         $ledger = $this->ledger($month);
         $adjustment = $this->IVAadjustment($ledger);
+        $checkingBalance = $this->checkingBalance($ledger,$adjustment);
+        $statementOfIncomet = $this->statementOfIncome($checkingBalance);
+        $balanceSheet = $this->balanceSheet($checkingBalance,$statementOfIncomet);
 
         $data = [
             'items' => $items,
             'parts' => $parts,
             'ledger' => $ledger,
             'adjustment' => $adjustment,
+            'checkingBalance' => $checkingBalance,
+            'statementOfIncome' => $statementOfIncomet,
+            'balanceSheet' => $balanceSheet,
         ];
 
         //return PDF::loadView('item.pdf', $data)->stream('librodiario.pdf');
