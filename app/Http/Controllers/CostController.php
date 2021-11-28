@@ -65,7 +65,10 @@ class CostController extends Controller
      */
     public function edit($id)
     {
-
+        $costo = cost::find($id);
+        return view('costs.editCost',[
+            'costoEdit' =>  $costo
+        ]);
     }
 
     /**
@@ -75,15 +78,16 @@ class CostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Request $request, cost $costoEdit)
     {
-        $Item = cost::find($request->idEdit);
-        $Item->description = $request->descripcionEdit;
-        $Item->amount = $request->montoEdit;
-        $Item->element = $request->elementEdit;
-        $Item->save();
-
+        $costoEdit  = cost::find($request->idEdit);
+        $costoEdit->description = $request->descripcionEdit;
+        $costoEdit->amount = $request->montoEdit;
+        $costoEdit->element = $request->elementEdit;
+        $costoEdit->save();
+        
         return redirect('/cost/create');
+        // return $costoEdit;
     }
 
     /**
