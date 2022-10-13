@@ -29,6 +29,6 @@ class HomeController extends Controller
         }
 
         Auth::logout();
-        return redirect('/login');   
+        return redirect('/contable/login');   
     }
 }
