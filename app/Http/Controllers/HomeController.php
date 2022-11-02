@@ -25,7 +25,7 @@ class HomeController extends Controller
     public function index()
     {   
         if (Auth::user()->active == 1) {
-            return view('home');
+            return redirect()->route('home');
         }
 
         Auth::logout();
