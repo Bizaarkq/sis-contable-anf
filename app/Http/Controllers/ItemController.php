@@ -118,14 +118,18 @@ class ItemController extends Controller
      */
     public function edit($id)
     {   
-        $item = Item::find($id);
-        $parts = Part::where('item_id',$id)->get();
+        $item = Item::Where('ID_PARTIDA',$id)
+        ->select('ID_PARTIDA','DESCRIPCION_PARTIDA','FECHA_PARTIDA')
+        ->with(['parts:ID_LIBRO_DIARIO,ID_CATALOGO,DEBE,HABER,ID_PARTIDA', 
+        'parts.accounts:ID_CATALOGO,NOMBRE_CATALOGO_CUENTAS,CODIGO_CATALOGO'])
+        ->first();
+        LOG::warning(json_encode($item));
+        //dd($item);
 
         return view('item.edit',[
-            'accounts' =>  Account::all(),
-            'date' => $item->date,
-            'item' => $item,
-            'parts' => $parts
+            'accounts' =>  Account::all()->where('ID_EMPRESA', session('empresaID')),
+            'date' => $item->FECHA_PARTIDA,
+            'item' => $item
         ]);
     }
 
@@ -138,29 +142,31 @@ class ItemController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $parts = Part::where('item_id',$id)->delete();
+        //dd($request, $id);
+        Part::where('ID_PARTIDA',$id)->delete();
         
         $n = count($request->request)-3;
         $n = $n/3;
         
         $item = Item::find($id);
-        $item->description = $request->description;
-        $item->date = $request->date;
-        $item->updated_by = Auth::user()->username;
+        $item->DESCRIPCION_PARTIDA = $request->description;
+        $item->FECHA_PARTIDA = $request->date;
+        $item->UPDATED_USER= Auth::user()->username;
         $item->save();
     
         for ($i=1; $i <= $n; $i++) { 
             $account = "account".$i;
             $debit = "debe".$i;
             $credit = "haber".$i;
-            $data = explode(",",$request->$account); 
+            $idCuenta = $request->$account; 
 
             $part = new Part();
-            $part->account_id = $data[0];
-            $part->account_title = $data[1];
-            $part->debit = $request->$debit;
-            $part->credit = $request->$credit;
-            $part->item_id = $id;
+            $part->ID_CATALOGO = $idCuenta;
+            $part->DEBE = $request->$debit;
+            $part->HABER = $request->$credit;
+            $part->ID_PARTIDA = $id;
+            $part->CREATED_USER = Auth::user()->username;
+            $part->UPDATED_USER = Auth::user()->username;
             $part->save();
         }
 
@@ -188,7 +194,6 @@ class ItemController extends Controller
     }
 
     public function JournalBook($month){
-        DB::enableQueryLog();
         $items = Item::whereMonth('FECHA_PARTIDA',$month)
         ->select('ID_PARTIDA','DESCRIPCION_PARTIDA','FECHA_PARTIDA')
         ->where('ID_EMPRESA', session('empresaID'))
@@ -269,10 +274,13 @@ class ItemController extends Controller
 
     public function getLedgerAccounts(){
 
-        $accounts = Account::all();
+        $accounts = Account::all()
+        ->where('NIVEL', 3)
+        ->where(session('empresaID'));
         $ledgerAccounts = [];
         foreach ($accounts as $account) {
-            if(strlen($account->id) == 4){
+            $cuenta = preg_replace('[^\d]+', '', $account->CODIGO_CATALOGO);
+            if(strlen($cuenta) == 4){
                 array_push($ledgerAccounts,$account);
             }
         }

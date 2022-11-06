@@ -3,9 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Part extends Model
 {   
+    use SoftDeletes;
     protected $table = 'LIBRO_DIARIO';
     protected $primaryKey = 'ID_LIBRO_DIARIO';
     //protected $dateFormat = 'd-m-Y';
