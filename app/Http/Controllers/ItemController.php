@@ -9,12 +9,24 @@ use App\Part;
 use App\Item;
 use PDF;
 use Auth;
-
+use Log;
+use DB;
 
 class ItemController extends Controller
 {   
+    protected $periodoActivo;
+
     public function __construct(){
         $this->middleware('auth'); //para restricciones
+        $this->periodoActivo = $this->getPeriodoActivo();
+    }
+
+    public function getPeriodoActivo(){
+        $periodoActivo = DB::table('PERIODO')
+        ->select('ID_PERIODO')
+        ->where('ACTIVO_PERIODO', 1)
+        ->first();
+        return $periodoActivo->ID_PERIODO;
     }
 
     /**
@@ -37,7 +49,7 @@ class ItemController extends Controller
     public function create()
     {
         return view('item.create',[
-            'accounts' =>  Account::all(),
+            'accounts' =>  Account::all()->where('ID_EMPRESA', session('empresaID')),
             'date' => date('Y-m-d')
         ]);
     }
@@ -54,26 +66,29 @@ class ItemController extends Controller
         $n = $n/3;
         
         $item = new Item();
-        $item->description = $request->description;
-        $item->date = date('Y-m-d');
-        $item->created_by = Auth::user()->username;
-        $item->updated_by = Auth::user()->username;
+        $item->ID_PERIODO = $this->periodoActivo;
+        $item->DESCRIPCION_PARTIDA = $request->description;
+        $item->FECHA_PARTIDA = date('Y-m-d');
+        $item->CREATED_USER = Auth::user()->username;
+        $item->UPDATED_USER = Auth::user()->username;
         $item->save();
 
-        $id = $item->all()->last()->id;
+        $id = $item->ID_PARTIDA;
     
         for ($i=1; $i <= $n; $i++) { 
             $account = "account".$i;
             $debit = "debe".$i;
             $credit = "haber".$i;
-            $data = explode(",",$request->$account); 
+            $id_account = $request->$account; 
 
             $part = new Part();
-            $part->account_id = $data[0];
-            $part->account_title = $data[1];
-            $part->debit = $request->$debit;
-            $part->credit = $request->$credit;
-            $part->item_id = $id;
+            $part->ID_CATALOGO = $id_account;
+            $part->DEBE = $request->$debit;
+            $part->HABER = $request->$credit;
+            $part->ID_PARTIDA = $id;
+            $part->CREATED_USER = Auth::user()->username;
+            $part->UPDATED_USER = Auth::user()->username;
+
             $part->save();
         }
 
