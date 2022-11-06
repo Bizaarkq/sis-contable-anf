@@ -24,41 +24,39 @@
             @endphp
             @foreach($items as $item)
                 <tr class="bg-light">
-                    <th>{{$item->date}}</th>
+                    <th>{{$item->FECHA_PARTIDA}}</th>
                     <th colspan="3">PARTIDA X{{$cont}} 
                         
-                        <a href="{{route('item.edit',$item->id)}}" class="px-1 py-0  text-primary btn"><i class="fas fa-pen"></i></a> 
+                        <a href="{{route('item.edit',$item->ID_PARTIDA)}}" class="px-1 py-0  text-primary btn"><i class="fas fa-pen"></i></a> 
                         
-                        <form action="/item/{{$item->id}}" method="POST" style="display: inline-block">
+                        <form action="/item/{{$item->ID_PARTIDA}}" method="POST" style="display: inline-block">
                             @csrf
                             @method('delete')
                             <button class="px-1 py-0 btn text-danger " type="submit" onclick="return confirm('Esta seguro de eliminar esta partida?')"><i class="fas fa-trash"></i></button>
                         </form>
                     </th>
                 </tr>
-                @foreach($parts as $part)
-                    @if($part->item_id == $item->id)
+                @foreach($item->parts as $part)
                         <tr>
                             <td></td>
-                            <td>{{$part->account_id}} {{$part->account_title}}</td>
-                            @if($part->debit == 0)
+                            <td>{{$part->accounts->CODIGO_CATALOGO}} {{$part->accounts->NOMBRE_CATALOGO_CUENTAS}}</td>
+                            @if($part->DEBE == 0)
                             <td></td>
                             @else
-                            <td>$ {{number_format($part->debit,2,".",",")}}</td>
+                            <td>$ {{number_format($part->DEBE,2,".",",")}}</td>
                             @endif
-                            @if($part->credit == 0)
+                            @if($part->HABER == 0)
                             <td></td>
                             @else
-                            <td>$ {{number_format($part->credit,2,".",",")}}</td>
+                            <td>$ {{number_format($part->HABER,2,".",",")}}</td>
                             @endif
                         </tr>
-                        @php($Tdebe += $part->debit)
-                        @php($Thaber += $part->credit)
-                    @endif
+                        @php($Tdebe += $part->DEBE)
+                        @php($Thaber += $part->HABER)
                 @endforeach
                 <tr>
                     <td></td>
-                    <td colspan="3"><i>{{$item->description}}</i></td>
+                    <td colspan="3"><i>{{$item->DESCRIPCION_PARTIDA}}</i></td>
                 </tr>
                 @php($cont++)
             @endforeach
@@ -82,7 +80,7 @@
     <h5 class="my-3">Eliga el mes del cual desea obtener el libro diario</h5>
     <select name="month" class="selectpicker my-3" data-width="90%" id="" onchange="this.form.submit()">
         @for ($i = 0; $i < $currentmonth; $i++)
-        <option value="{{$i+1}}">{{$months[$i]}}</option> 
+        <option value="{{$i+1}}" selected="{{$selectedmonth}}">{{$months[$i]}}</option> 
         @endfor
     </select>
     {{-- <button class="btn btn-primary" type="submit">Obtener</button> --}}

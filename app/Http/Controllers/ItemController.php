@@ -37,7 +37,10 @@ class ItemController extends Controller
     public function index()
     {   
         return view('item.index',[
-            'items' => Item::orderby('date')->get()
+            'items' => Item::orderby('CREATED_AT')
+            ->Where('ID_PERIODO', $this->periodoActivo)
+            ->Where('ID_EMPRESA', session('empresaID'))
+            ->get()
         ]);
     }
 
@@ -67,6 +70,7 @@ class ItemController extends Controller
         
         $item = new Item();
         $item->ID_PERIODO = $this->periodoActivo;
+        $item->ID_EMPRESA = session('empresaID');
         $item->DESCRIPCION_PARTIDA = $request->description;
         $item->FECHA_PARTIDA = date('Y-m-d');
         $item->CREATED_USER = Auth::user()->username;
@@ -184,17 +188,18 @@ class ItemController extends Controller
     }
 
     public function JournalBook($month){
-        $items = Item::whereMonth('date',$month)->orderby('date')->get();
-        $parts = Part::all();
-        /* foreach ($items as $item) {
-            $part = Part::where('item_id','=',$item->id)->get();
-            dd($part);
-            array_push($parts,$part);
-        } */
+        DB::enableQueryLog();
+        $items = Item::whereMonth('FECHA_PARTIDA',$month)
+        ->select('ID_PARTIDA','DESCRIPCION_PARTIDA','FECHA_PARTIDA')
+        ->where('ID_EMPRESA', session('empresaID'))
+        ->where('ID_PERIODO', $this->periodoActivo)
+        ->orderby('FECHA_PARTIDA')
+        ->with(['parts:ID_LIBRO_DIARIO,ID_CATALOGO,DEBE,HABER,ID_PARTIDA', 
+        'parts.accounts:ID_CATALOGO,NOMBRE_CATALOGO_CUENTAS,CODIGO_CATALOGO'])
+        ->get();
         
         return view('item.JournalBook',[
             'items' => $items,
-            'parts' => $parts,
             'currentmonth' => date('m'),
             'selectedmonth' => $month,
             'months' => [0 => 'Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']

@@ -13,6 +13,6 @@ class Account extends Model
     public $timestamps = false;
 
     public function parts(){
-        return $this->belongsTo(Part::class); //pertenece a part
+        return $this->hasMany(Part::class, 'ID_CATALOGO','ID_CATALOGO'); //pertenece a part
     }
 }
