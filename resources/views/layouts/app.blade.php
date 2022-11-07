@@ -29,12 +29,14 @@
             </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                @if (Session::has('permisos'))
                 @if(array_key_exists("ADMIN", Session::get('permisos')))
                     @if(in_array("administrador", Session::get('permisos')['ADMIN']))
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="/user">Usuarios</a>
                     </li>         
                     @endif
+                @endif
                 @endif
                 <li class="nav-item dropdown ">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -51,10 +53,12 @@
                         Documentos Contables
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                        @if (Session::has('permisos'))
                         @if(array_key_exists("ADMIN", Session::get('permisos')))
                             @if(in_array("administrador", Session::get('permisos')['ADMIN']))
                         <li><a class="dropdown-item" href="/item">Detalles de Partidas</a></li>      
                             @endif
+                        @endif
                         @endif
                         <li><a class="dropdown-item" href="/item/create">Agregar Partida</a></li>
                         <li><hr class="dropdown-divider"></li>
