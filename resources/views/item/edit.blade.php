@@ -2,7 +2,7 @@
 
 @section('content')
 
-<form class="partida shadow rounded-3" action="/item/{{$item->id}}" method="post" name="item">
+<form class="partida shadow rounded-3" action="/item/{{$item->ID_PARTIDA}}" method="post" name="item">
     @csrf
     @method('put')
     <table class="" id="table">
@@ -12,50 +12,43 @@
             <th class="debe">Debe</th>
             <th class="haber">Haber</th>
         </tr>
-            @for ($i = 0; $i < count($parts); $i++)
-            <tr>
-                @if($i == 0)
-                    <td class="fecha">
-                        <input  class="" type="date" name="date" id=""  value="{{$date}}" >
-                    </td>
-                @else
-                    <td class="fecha">
-                        <input  class="input-fecha" type="date" name="" id="" style="color: #f8f9fa;" readonly>
-                    </td>
-                @endif
+        <tr>
+            <td class="fecha">
+                <input  class="" type="date" name="date" id=""  value="{{$date}}" >
+            </td>
+        </tr>
+            @php $i = 0; @endphp
+            @foreach ($item->parts as $part)
+            <tr>                   
                 <td class="concepto">
                     <select class="selectpicker my-2" data-live-search="true" data-width="100%" name="account{{$i+1}}">
                         @foreach($accounts as $account)
-                                @if ($account->id == $parts[$i]->account_id)
-                                <option value="{{$account->id}},{{$account->title}}" selected>{{$account->id}} {{$account->title}}</option> 
-                                @else
-                                <option value="{{$account->id}},{{$account->title}}">{{$account->id}} {{$account->title}}</option>  
-                                @endif
-                                 
+                                <option value="{{$account->ID_CATALOGO}}" {{ $account->ID_CATALOGO ==$part->accounts->ID_CATALOGO ? "selected" : "" }}>{{$account->CODIGO_CATALOGO}} {{$account->NOMBRE_CATALOGO_CUENTAS}}</option> 
                         @endforeach
                     </select>
                 </td>
                 <td class="debe">
-                    @if($parts[$i]->debit >0)
-                        <input class="debe-input" type="number" name="debe{{$i+1}}" id=""  min="0" step="0.01" value="{{$parts[$i]->debit}}">
+                    @if($part->DEBE >0)
+                        <input class="debe-input" type="number" name="debe{{$i+1}}" id=""  min="0" step="0.01" value="{{$part->DEBE}}">
                     @else
                         <input class="debe-input" type="number" name="debe{{$i+1}}" id=""  min="0" step="0.01">   
                     @endif
                 </td>
                 <td class="haber">
-                    @if($parts[$i]->credit >0)
-                        <input class="haber-input" type="number" name="haber{{$i+1}}" id=""  min="0" step="0.01" value="{{$parts[$i]->credit}}">
+                    @if($part->HABER >0)
+                        <input class="haber-input" type="number" name="haber{{$i+1}}" id=""  min="0" step="0.01" value="{{$part->HABER}}">
                     @else
                         <input class="haber-input" type="number" name="haber{{$i+1}}" id=""  min="0" step="0.01">   
                     @endif
                 </td>
             </tr>
-            @endfor
+            @php($i++)
+            @endforeach
     </table>
     <table id="table">
         <tr>
             <td class="descripcion">
-                <input type="text" name="description" class="input-descripcion" placeholder="Descripción de la partida" value="{{$item->description}}">
+                <input type="text" name="description" class="input-descripcion" placeholder="Descripción de la partida" value="{{$item->DESCRIPCION_PARTIDA}}">
             </td>
         </tr>
         <tr>
@@ -84,7 +77,7 @@
 @section('js')
 <script> 
 
-let cont = <?php echo count($parts); ?>
+let cont = <?php echo count($item->parts); ?>
 
 $(document).ready(function (){
 
@@ -118,13 +111,10 @@ $(document).ready(function (){
         console.log(cont)
         $('#table').append(`
             <tr>
-                <td class="fecha">
-                <input  class="input-fecha" type="date" name="" id=""  style="color: #f8f9fa;" readonly>
-                </td>
                 <td class="concepto">
                     <select class="selectpicker my-2" data-live-search="true" data-width="100%" name="account${cont}">
                         @foreach($accounts as $account)
-                                <option value="{{$account->id}},{{$account->title}}">{{$account->id}} {{$account->title}}</option>  
+                                <option value="{{$account->ID_CATALOGO}}">{{$account->CODIGO_CATALOGO}} {{$account->NOMBRE_CATALOGO_CUENTAS}}</option>  
                         @endforeach
                     </select>
                 </td>

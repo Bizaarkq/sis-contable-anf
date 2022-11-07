@@ -29,4 +29,8 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function empresas(){
+        return $this->belongsToMany(Empresa::class, 'ACCESO_USUARIO', 'ID_USUARIO', 'ID_EMPRESA');
+    }
+
 }

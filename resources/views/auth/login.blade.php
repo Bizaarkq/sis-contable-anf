@@ -14,7 +14,7 @@
                     <input type="username" name="username" class="form-control @error('username') is-invalid @enderror" value="{{ old('username') }}" id="floatingInput" placeholder="Usuario" required>
                     <label for="floatingInput">Usuario</label>
                     @error('username')
-                        <span class="text-danrger" role="alert">
+                        <span class="text-danger" role="alert">
                             <p>{{ $message }}</p>
                         </span>
                     @enderror
@@ -23,7 +23,7 @@
                     <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" id="floatingPassword" placeholder="Contraseña" required autocomplete="current-password">
                     <label for="floatingPassword">Contraseña</label>
                     @error('password')
-                        <span class="text-danrger" role="alert">
+                        <span class="text-danger" role="alert">
                             <p>{{ $message }}</p>
                         </span>
                     @enderror

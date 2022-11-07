@@ -3,18 +3,22 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Part extends Model
 {   
+    use SoftDeletes;
+    protected $table = 'LIBRO_DIARIO';
+    protected $primaryKey = 'ID_LIBRO_DIARIO';
     //protected $dateFormat = 'd-m-Y';
-    public $timestamps = false;
+    //public $timestamps = false;
 
     public function accounts(){
-        return $this->hasMany(Account::class); //tiene muchos accounts
+        return $this->belongsTo(Account::class, 'ID_CATALOGO', 'ID_CATALOGO'); //tiene muchos accounts
     }
 
     public function items(){
-        return $this->belongsTo(Item::class); //pertenece a part
+        return $this->belongsTo(Item::class, 'ID_PARTIDA', 'ID_PARTIDA'); //pertenece a part
     }
 
 

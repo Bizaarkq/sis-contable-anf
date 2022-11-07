@@ -16,12 +16,12 @@
             <tbody>
                 @foreach ($items as $item)
                     <tr>
-                        <td>{{$item->description}}</td>
-                        <td>{{$item->date}}</td>
-                        <td>{{$item->created_by}}</td>
-                        <td>{{$item->updated_by}}</td>
-                        <td>{{$item->created_at}}</td>
-                        <td>{{$item->updated_at}}</td>
+                        <td>{{$item->DESCRIPCION_PARTIDA}}</td>
+                        <td>{{$item->FECHA_PARTIDA}}</td>
+                        <td>{{$item->CREATED_USER}}</td>
+                        <td>{{$item->UPDATED_USER}}</td>
+                        <td>{{$item->CREATED_AT}}</td>
+                        <td>{{$item->UPDATED_AT}}</td>
                     </tr>
                 @endforeach
             </tbody>

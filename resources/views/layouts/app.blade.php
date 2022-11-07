@@ -23,16 +23,20 @@
     @auth {{-- si el usuario esta auntenticado --}}
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/home">Hotel San Francisco</a>
+            <a class="navbar-brand" href="{{route('home')}}">ANF115</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                @if(Auth::user()->type == 1)
+                @if (Session::has('permisos'))
+                @if(array_key_exists("ADMIN", Session::get('permisos')))
+                    @if(in_array("administrador", Session::get('permisos')['ADMIN']))
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="/user">Usuarios</a>
                     </li>         
+                    @endif
+                @endif
                 @endif
                 <li class="nav-item dropdown ">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -49,8 +53,12 @@
                         Documentos Contables
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                        @if(Auth::user()->type == 1)
-                        <li><a class="dropdown-item" href="/item">Detalles de Partidas</a></li>        
+                        @if (Session::has('permisos'))
+                        @if(array_key_exists("ADMIN", Session::get('permisos')))
+                            @if(in_array("administrador", Session::get('permisos')['ADMIN']))
+                        <li><a class="dropdown-item" href="/item">Detalles de Partidas</a></li>      
+                            @endif
+                        @endif
                         @endif
                         <li><a class="dropdown-item" href="/item/create">Agregar Partida</a></li>
                         <li><hr class="dropdown-divider"></li>
@@ -60,13 +68,19 @@
             </ul>
             <div class="d-flex">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown dropstart">
                         <a id="navbarScrollingDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" > {{-- v-pre --}}
                             {{ Auth::user()->username }} <span class="caret"></span>
                         </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                            <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">Salir</a>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
+                        <ul class="dropdown-menu dropdown-menu-md-start" aria-labelledby="navbarScrollingDropdown">
+                            <li>
+                                <a class="dropdown-item" href="{{route('empresas')}}">Cambiar Empresa</a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();">Salir</a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">@csrf</form>
+                            </li>
                         </ul>
                     </li>
                 </ul>

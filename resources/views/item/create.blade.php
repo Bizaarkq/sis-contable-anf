@@ -18,7 +18,7 @@
             <td class="concepto">
                 <select class="selectpicker my-2" data-live-search="true" data-width="100%" name="account1">
                     @foreach($accounts as $account)
-                            <option value="{{$account->id}},{{$account->title}}">{{$account->id}} {{$account->title}}</option>  
+                            <option value="{{$account->ID_CATALOGO}}">{{$account->CODIGO_CATALOGO}} {{$account->NOMBRE_CATALOGO_CUENTAS}}</option>  
                     @endforeach
                 </select>
             </td>
@@ -36,7 +36,7 @@
             <td class="concepto">
                 <select class="selectpicker my-2" data-live-search="true" data-width="100%" name="account2">
                     @foreach($accounts as $account)
-                            <option value="{{$account->id}},{{$account->title}}">{{$account->id}} {{$account->title}}</option>  
+                    <option value="{{$account->ID_CATALOGO}}">{{$account->CODIGO_CATALOGO}} {{$account->NOMBRE_CATALOGO_CUENTAS}}</option>  
                     @endforeach
                 </select>
             </td>
@@ -95,7 +95,7 @@ $(document).ready(function (){
                 <td class="concepto">
                     <select class="selectpicker my-2" data-live-search="true" data-width="100%" name="account${cont}">
                         @foreach($accounts as $account)
-                                <option value="{{$account->id}},{{$account->title}}">{{$account->id}} {{$account->title}}</option>  
+                                <option value="{{$account->ID_CATALOGO}}">{{$account->CODIGO_CATALOGO}} {{$account->NOMBRE_CATALOGO_CUENTAS}}</option>  
                         @endforeach
                     </select>
                 </td>

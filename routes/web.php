@@ -26,6 +26,14 @@
     Route::middleware(['auth'])->group(function(){
         Route::view('/',"home")->name('home');
 
+        //rutas para empresas
+        Route::prefix('empresa')->group(function(){
+            Route::get('/', 'EmpresaController@index')->name('empresas');
+            Route::post('/rol', 'EmpresaController@setRolEmpresa')->name('empresa.rol');
+            Route::get('/getEmpresas', 'EmpresaController@getEmpresas')->name('empresa.getEmpresas');
+        });
+        
+
         //rutas de item
         Route::get('/item/confirmJournalBook','ItemController@confirmJournalBook');
         Route::get('/item/{month}/JournalBook','ItemController@JournalBook');
