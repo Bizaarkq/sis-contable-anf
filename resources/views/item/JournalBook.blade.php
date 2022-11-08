@@ -23,6 +23,10 @@
                $Thaber = 0; 
             @endphp
             @foreach($items as $item)
+                @php
+                    $totalPartidaD = 0;
+                    $totalPartidaH = 0;
+                @endphp
                 <tr class="bg-light">
                     <th>{{$item->FECHA_PARTIDA}}</th>
                     <th colspan="3">PARTIDA X{{$cont}} 
@@ -53,7 +57,15 @@
                         </tr>
                         @php($Tdebe += $part->DEBE)
                         @php($Thaber += $part->HABER)
+                        @php($totalPartidaD += $part->DEBE)
+                        @php($totalPartidaH += $part->HABER) 
                 @endforeach
+                <tr>
+                    <td></td>
+                    <td class="">TOTAL</td>
+                    <td>{{"$ ".number_format($totalPartidaD,2,".",",")}}</td>
+                    <td>{{"$ ".number_format($totalPartidaH,2,".",",")}}</td>
+                </tr>
                 <tr>
                     <td></td>
                     <td colspan="3"><i>{{$item->DESCRIPCION_PARTIDA}}</i></td>

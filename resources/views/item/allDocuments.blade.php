@@ -1,11 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-@if($selectedmonth == 12)
 <div>
-    <a href="/item/12/closeYear" class="btn btn-primary shadow"><strong>Realziar cierre contable</strong></a>
+        <a href="{{route('estados.guardar')}}" class="btn btn-primary shadow" ><strong>Guardar Estados Financieros</strong></a>
 </div>
-@endif
 <div class="my-4 p-4 rounded-3 shadow" style="background-color: white; width:90%;" id="mayorizacion">
     <h1 class="text-center h4">LIBRO MAYOR</h1>
     <div class=" row row-cols-1 row-cols-md-2 row-cols-lg-3 g-2 g-lg-3">
