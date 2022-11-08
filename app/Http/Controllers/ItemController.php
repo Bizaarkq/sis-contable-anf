@@ -10,6 +10,7 @@ use App\Item;
 use App\Empresa;
 use App\Helpers\EstadosFinancieros;
 use App\Helpers\BalanceGeneral;
+use App\Helpers\RatiosCuenta;
 use PDF;
 use Auth;
 use Log;
@@ -220,7 +221,7 @@ class ItemController extends Controller
         ->where('ID_PERIODO', $this->periodoActivo)
         ->orderby('FECHA_PARTIDA')
         ->with(['parts:ID_LIBRO_DIARIO,ID_CATALOGO,DEBE,HABER,ID_PARTIDA', 
-        'parts.accounts:ID_CATALOGO,NOMBRE_CATALOGO_CUENTAS,CODIGO_CATALOGO,CORRIENTE'])
+        'parts.accounts:ID_CATALOGO,NOMBRE_CATALOGO_CUENTAS,CODIGO_CATALOGO,CORRIENTE,SALDO'])
         ->get();
         $accounts = $this->getLedgerAccounts();
         $ledger = [];
@@ -232,6 +233,7 @@ class ItemController extends Controller
         foreach ($accounts as $account) {
             $table['title'] = $account->NOMBRE_CATALOGO_CUENTAS;
             $table['id'] = $account->CODIGO_CATALOGO;
+            $table['saldo'] = $account->SALDO;
             $table['corriente'] = $account->CORRIENTE;
             foreach ($items as $item) {
                 foreach ($item->parts as $part) {
@@ -544,6 +546,9 @@ class ItemController extends Controller
         $statementOfIncomet = $this->statementOfIncome();
         $balanceSheet = $this->balanceSheet($checkingBalance,$statementOfIncomet);
 
+        $confCuentas = Empresa::where('ID_EMPRESA',session('empresaID'))->pluck('CONFIG_CUENTA')[0];
+        $confCuentas = json_decode($confCuentas, true)['balance'];
+        
         //dd($balanceSheet, $statementOfIncomet, $checkingBalance, $ledger);
         DB::beginTransaction();
         //insertando estado de resultados
@@ -609,7 +614,24 @@ class ItemController extends Controller
         Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $totalPasivosCorriente + $totalPasivosNoCorriente + $capitalTotal]);
 
         DB::commit();
-        return redirect()->back();
+        
+        //guardando datos para calculos de ratio
+        DB::beginTransaction();
+        foreach(RatiosCuenta::ARREGLO as $key => $value){
+            $codigo = $confCuentas[$value]["codigo"];
+            $llave = array_search($codigo, array_column($ledger, "id"), true);
+            if($llave !== false){
+                $efectivo = $ledger[$llave]["saldo"] == "DEUDOR" ?
+                $ledger[$llave]["totaldebits"] - $ledger[$llave]["totalcredits"] :
+                $ledger[$llave]["totalcredits"] - $ledger[$llave]["totaldebits"];
+            }else{
+                $efectivo = 0;
+            }
+            $empresaPeriodo["ID_CUENTA_FINANCIERA"] = $value;
+            Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $efectivo]);
+        }
+        DB::commit();
+        return response()->json(["message" => "Datos guardados correctamente"],200);
     }
 
 }
