@@ -8,10 +8,13 @@ use App\Account;
 use App\Part;
 use App\Item;
 use App\Empresa;
+use App\Helpers\EstadosFinancieros;
+use App\Helpers\BalanceGeneral;
 use PDF;
 use Auth;
 use Log;
 use DB;
+use App\Registro;
 
 class ItemController extends Controller
 {   
@@ -193,8 +196,7 @@ class ItemController extends Controller
     }
 
     public function JournalBook($month){
-        $items = Item::whereMonth('FECHA_PARTIDA',$month)
-        ->select('ID_PARTIDA','DESCRIPCION_PARTIDA','FECHA_PARTIDA')
+        $items = Item::Select('ID_PARTIDA','DESCRIPCION_PARTIDA','FECHA_PARTIDA')
         ->where('ID_EMPRESA', session('empresaID'))
         ->where('ID_PERIODO', $this->periodoActivo)
         ->orderby('FECHA_PARTIDA')
@@ -211,15 +213,14 @@ class ItemController extends Controller
         
     }
 
-    public function ledger($month){ // hecho el 11/11/2021 no se si le entendere despues
+    public function ledger(){ // hecho el 11/11/2021 no se si le entendere despues
 
-        $items = Item::whereMonth('FECHA_PARTIDA',$month)
-        ->select('ID_PARTIDA','DESCRIPCION_PARTIDA','FECHA_PARTIDA')
+        $items = Item::Select('ID_PARTIDA','DESCRIPCION_PARTIDA','FECHA_PARTIDA')
         ->where('ID_EMPRESA', session('empresaID'))
         ->where('ID_PERIODO', $this->periodoActivo)
         ->orderby('FECHA_PARTIDA')
         ->with(['parts:ID_LIBRO_DIARIO,ID_CATALOGO,DEBE,HABER,ID_PARTIDA', 
-        'parts.accounts:ID_CATALOGO,NOMBRE_CATALOGO_CUENTAS,CODIGO_CATALOGO'])
+        'parts.accounts:ID_CATALOGO,NOMBRE_CATALOGO_CUENTAS,CODIGO_CATALOGO,CORRIENTE'])
         ->get();
         $accounts = $this->getLedgerAccounts();
         $ledger = [];
@@ -231,6 +232,7 @@ class ItemController extends Controller
         foreach ($accounts as $account) {
             $table['title'] = $account->NOMBRE_CATALOGO_CUENTAS;
             $table['id'] = $account->CODIGO_CATALOGO;
+            $table['corriente'] = $account->CORRIENTE;
             foreach ($items as $item) {
                 foreach ($item->parts as $part) {
                     
@@ -310,6 +312,7 @@ class ItemController extends Controller
             $heading['title'] = $table['title'];
             $heading['id'] = $table['id'];
             $heading['total'] = $table['total'];
+            $heading['corriente'] = $table['corriente'];
             $table['totaldebits'] > $table['totalcredits'] ? 
             $checkingBalance['totales']['totaldebit'] += $heading['total'] : 
             $checkingBalance['totales']['totalcredit'] += $heading['total'];
@@ -326,7 +329,7 @@ class ItemController extends Controller
         return $checkingBalance;
     }
 
-    public function statementOfIncome($month){
+    public function statementOfIncome(){
 
         $confCuentas = Empresa::where('ID_EMPRESA',session('empresaID'))->pluck('CONFIG_CUENTA')[0];
         $confCuentas = json_decode($confCuentas, true)['cuentas_financieras'];
@@ -335,8 +338,7 @@ class ItemController extends Controller
         ->whereIn('ID_CATALOGO',array_column($confCuentas, 'id'))
         ->pluck('NOMBRE_CATALOGO_CUENTAS','ID_CATALOGO');
         //dd($confCuentas, $accounts);
-        $items = Item::whereMonth('FECHA_PARTIDA', $month)
-        ->select('ID_PARTIDA')
+        $items = Item::Select('ID_PARTIDA')
         ->where('ID_EMPRESA', session('empresaID'))
         ->where('ID_PERIODO', $this->periodoActivo)
         ->orderby('FECHA_PARTIDA')
@@ -366,13 +368,13 @@ class ItemController extends Controller
         foreach($items as $item){
             foreach($item->parts as $part){
                 if(str_starts_with($part->accounts->CODIGO_CATALOGO, $confCuentas[33]['codigo'])){
-                    $result['ingresos']['total'] += $part->DEBE - $part->HABER;
+                    $result['ingresos']['total'] += $part->HABER - $part->DEBE;
                 }else if(str_starts_with($part->accounts->CODIGO_CATALOGO, $confCuentas[34]['codigo'])){
                     $result['costos']['total'] += $part->DEBE - $part->HABER;
                 }else if(str_starts_with($part->accounts->CODIGO_CATALOGO, $confCuentas[36]['codigo'])){
                     $result['gastosOp']['total'] += $part->DEBE - $part->HABER;
                 }else if(str_starts_with($part->accounts->CODIGO_CATALOGO, $confCuentas[41]['codigo'])){
-                    $result['otrosIng']['total'] += $part->DEBE - $part->HABER;
+                    $result['otrosIng']['total'] += $part->HABER - $part->DEBE;
                 }
             }
         }
@@ -445,6 +447,7 @@ class ItemController extends Controller
         $heading['title'] = 'IMPUESTOS POR PAGAR';
         $heading['total'] = $statementOfIncomet['impuestos']['total'];
         $heading['balance']=0;
+        $heading['corriente']=1;
         $bs['totalcredit'] += $heading['total'];
         array_push($bs['liability'],$heading);
 
@@ -468,11 +471,10 @@ class ItemController extends Controller
 
     public function allDocuments($month){
         
-        $ledger = $this->ledger($month);
-        //$adjustment = $this->IVAadjustment($ledger);
+        $ledger = $this->ledger();
 
         $checkingBalance = $this->checkingBalance($ledger);
-        $statementOfIncomet = $this->statementOfIncome($month);
+        $statementOfIncomet = $this->statementOfIncome();
         $balanceSheet = $this->balanceSheet($checkingBalance,$statementOfIncomet);
         
         return view('item.allDocuments',[
@@ -535,4 +537,79 @@ class ItemController extends Controller
         //return PDF::loadView('item.pdf', $data)->stream('librodiario.pdf');
         return PDF::loadView('item.pdf', $data)->setPaper(array(0,0,612.00,936.00), 'landscape')->stream('reporte-mes-'.$month.'.pdf');
     }
+
+    public function guardarRegistros(){
+        $ledger = $this->ledger();
+        $checkingBalance = $this->checkingBalance($ledger);
+        $statementOfIncomet = $this->statementOfIncome();
+        $balanceSheet = $this->balanceSheet($checkingBalance,$statementOfIncomet);
+
+        //dd($balanceSheet, $statementOfIncomet, $checkingBalance, $ledger);
+        DB::beginTransaction();
+        //insertando estado de resultados
+        $empresaPeriodo = ["ID_EMPRESA" => session("empresaID"),"ID_PERIODO" => $this->periodoActivo];
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = EstadosFinancieros::INGRESOS;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $statementOfIncomet["ingresos"]["total"]]);
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = EstadosFinancieros::COSTOS;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $statementOfIncomet["ingresos"]["total"]]);
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = EstadosFinancieros::UTILIDAD_BRUTA;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $statementOfIncomet["utilidadBruta"]["total"]]);
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = EstadosFinancieros::GASTOS_OPERACION;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $statementOfIncomet["gastosOp"]["total"]]);
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = EstadosFinancieros::UTILIDAD_OPERACION;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $statementOfIncomet["utilidadOp"]["total"]]);
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = EstadosFinancieros::OTRO_INGRESOS;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $statementOfIncomet["otrosIng"]["total"]]);
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = EstadosFinancieros::UTILIDAD_ANTES_IMP_RES;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $statementOfIncomet["utilidadAntesImpRes"]["total"]]);
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = EstadosFinancieros::RESERVA;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $statementOfIncomet["reserva"]["total"]]);
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = EstadosFinancieros::UTILIDAD_ANTES_IMP;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $statementOfIncomet["utilidadAntesImp"]["total"]]);
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = EstadosFinancieros::IMPUESTO;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $statementOfIncomet["impuestos"]["total"]]);
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = EstadosFinancieros::UTILIDAD_NETA;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $statementOfIncomet["utilidadNeta"]["total"]]);
+        
+        DB::commit();
+
+        //insertando balance general
+         DB::beginTransaction();
+        $activosCorrientes = array_filter($balanceSheet["asset"],function($item){return $item["corriente"] == 1;});
+        $activosNoCorrientes = array_filter($balanceSheet["asset"],function($item){return $item["corriente"] === 0;});
+
+        $totalActivosCorriente = array_reduce($activosCorrientes,function($carry,$item){
+            return $item["balance"] == 1 ? $carry + $item["total"] : $carry - $item["total"];
+        },0);
+        $totalActivosNoCorriente = array_reduce($activosNoCorrientes,function($carry,$item){
+            return $item["balance"] == 1 ? $carry + $item["total"] : $carry - $item["total"];
+        },0);
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = BalanceGeneral::ACTIVO_CORRIENTE;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $totalActivosCorriente]);
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = BalanceGeneral::ACTIVO_NO_CORRIENTE;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $totalActivosNoCorriente]);
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = BalanceGeneral::ACTIVO_TOTAL;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $totalActivosCorriente + $totalActivosNoCorriente]);
+        $pasivosCorrientes = array_filter($balanceSheet["liability"],function($item){return $item["corriente"] == 1;});
+        $pasivosNoCorrientes = array_filter($balanceSheet["liability"],function($item){return $item["corriente"] === 0;});
+        $totalPasivosCorriente = array_reduce($pasivosCorrientes,function($carry,$item){return $item["balance"] == 0 ? $carry + $item["total"] : $carry - $item["total"];},0);
+        $totalPasivosNoCorriente = array_reduce($pasivosNoCorrientes,function($carry,$item){return $item["balance"] == 0 ? $carry + $item["total"] : $carry - $item["total"];},0);
+
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = BalanceGeneral::PASIVO_CORRIENTE;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $totalPasivosCorriente]);
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = BalanceGeneral::PASIVO_NO_CORRIENTE;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $totalPasivosNoCorriente]);
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = BalanceGeneral::PASIVO_TOTAL;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $totalPasivosCorriente + $totalPasivosNoCorriente]);
+
+        $capitalTotal = array_reduce($balanceSheet["capital"],function($carry,$item){return $item["balance"] == 0 ? $carry + $item["total"] : $carry - $item["total"];},0);
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = BalanceGeneral::PATRIMONIO;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $capitalTotal]);
+        $empresaPeriodo["ID_CUENTA_FINANCIERA"] = BalanceGeneral::PASIVO_PATRIMONIO;
+        Registro::updateOrInsert($empresaPeriodo,["MONTO_REGISTRO" => $totalPasivosCorriente + $totalPasivosNoCorriente + $capitalTotal]);
+
+        DB::commit();
+        return redirect()->back();
+    }
+
 }
