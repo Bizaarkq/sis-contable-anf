@@ -41,6 +41,7 @@
         Route::post('/item/setMonthJournalBook','ItemController@setMonthJournalBook');
         Route::get('/item/{month}/pdf','ItemController@pdf');
         Route::resource('/item','ItemController'); 
+        Route::post('/guardarEstados','ItemController@guardarRegistros')->name('estados.guardar');
         //rutas user
         Route::put('/user/activeUpdate/{user}','UserController@activeUpdate');
         Route::put('/user/roleUpdate/{user}','UserController@roleUpdate');

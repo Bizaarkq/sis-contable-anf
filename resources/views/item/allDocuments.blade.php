@@ -2,7 +2,7 @@
 
 @section('content')
 <div>
-        <a href="{{route('estados.guardar')}}" class="btn btn-primary shadow" ><strong>Guardar Estados Financieros</strong></a>
+        <button id="guardarEstados" type="button" class="btn btn-primary shadow" ><strong>Guardar Estados Financieros</strong></button>
 </div>
 <div class="my-4 p-4 rounded-3 shadow" style="background-color: white; width:90%;" id="mayorizacion">
     <h1 class="text-center h4">LIBRO MAYOR</h1>
@@ -284,4 +284,22 @@
 
 @endsection
 @section('js')
+<script>
+    function guardarEstados() {
+            $.ajax({
+                url: "{{ route('estados.guardar') }}",
+                type: "POST",
+                data: {_token: '{{csrf_token()}}'},
+                dataType: "json",
+                success: function(data) {
+                    alert(data.message);                           
+                }
+            });
+        }
+
+        $(document).ready(function() {
+            
+            $('#guardarEstados').on('click', guardarEstados);
+        });
+</script>
 @endsection
