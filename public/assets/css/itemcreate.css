@@ -1,0 +1,157 @@
+main{
+    width: 100%;
+    height: auto;
+    margin-top: 50px;
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    flex-direction: column;
+}
+
+.formulario {
+    width: 70%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 10px;  
+    background-color: white; 
+    border-radius: 8px;
+}
+
+.options{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.cuenta{
+    width: 60%;
+    display: flex;
+    justify-content: center;
+}
+
+.saldo{
+    width: 20%;
+    display: flex;
+    justify-content: center;
+}
+
+.monto{
+    width: 20%;
+    display: flex;
+    justify-content: center;
+}
+
+/* .radios{
+    display: flex;
+    justify-content: center;
+    width: 20%;
+    background-color: #f8f9fa;
+    padding: 6px 12px; 
+    border-radius: 3px;
+} */
+
+.monto input{
+    width: 90%;
+    border: none;
+    background-color: #f8f9fa;
+    border-radius: 3px;
+    padding: 6px 12px;    
+}
+
+input:focus{
+    outline: none;
+}
+
+.btnAdd{
+    width: 40px;
+    height: 40px;
+}
+
+.div-botones{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* PARTIDA */
+
+.partida{
+    width: 90%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: white;
+}
+
+.fecha{
+    width: 10%;
+}
+
+.concepto{
+    width: 50%;
+}
+
+.parcial,.debe,.haber{
+    width: 20%;
+}
+
+.descripcion{
+    width: 100%;
+}
+
+.fecha input, .concepto input, .parcial input, .debe input, .haber input, .descripcion input{
+    width: 100%;
+    background-color: #f8f9fa;
+    border: none;
+    height: 100%;
+    border-radius: 3px;
+    padding: 10px;
+    font-weight:600;
+}
+
+.descripcion input{
+    text-align: center;
+}
+
+
+#table tr{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#table th, #table td{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#table td{
+    height: 40px;
+    margin: 5px 5px;
+}
+
+#table th{
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.totales{
+    width: 20%;
+}
+
+.totales input{
+    width: 100%;
+    background-color: none;
+    border: none;
+    height: 100%;
+    border-radius: 3px;
+    padding: 10px;
+    font-weight:600;
+    
+}
+
