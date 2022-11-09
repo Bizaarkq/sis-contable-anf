@@ -65,6 +65,7 @@
                         <li><a class="dropdown-item" href="/item/{{$month}}/JournalBook">Libro diario</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="/catalogo/crear">Crear catalogo</a></li>
+                        <li><a class="dropdown-item" href="/catalogo/configurar">Configurar Catalogo</a></li>
                     </ul>
                 </li>
             </ul>

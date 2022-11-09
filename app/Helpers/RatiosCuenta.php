@@ -16,10 +16,10 @@ class RatiosCuenta
     ];
 
     const CONFIGURACION = [
-        "BALANCE" => [
+        "ESTADO_RESULTADOS" => [
             33,34,36,41,43,44
         ],
-        "ESTADO_RESULTADOS" => [
+        "BALANCE" => [
             1,2,8,17
         ]
     ];
