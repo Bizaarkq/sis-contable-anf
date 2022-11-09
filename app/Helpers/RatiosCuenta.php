@@ -14,4 +14,13 @@ class RatiosCuenta
         "INVENTARIOS" => 8,
         "PROVEEDORES" => 17
     ];
+
+    const CONFIGURACION = [
+        "BALANCE" => [
+            33,34,36,41,43,44
+        ],
+        "ESTADO_RESULTADOS" => [
+            1,2,8,17
+        ]
+    ];
 }

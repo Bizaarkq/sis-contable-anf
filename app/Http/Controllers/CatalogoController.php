@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Account;
-
+use App\Helpers\RatiosCuenta;
+use DB;
 class CatalogoController extends Controller
 {
     //
@@ -50,4 +51,18 @@ class CatalogoController extends Controller
         return redirect('/');
     
     }
-}
+
+    public function configurar(){
+
+        $cuentas = [];
+        foreach (RatiosCuenta::CONFIGURACION as $key => $value) {
+            foreach ($value as $value2) {
+                $cuenta = DB::table('CUENTAS_FINANCIERAS')->where("ID_CUENTA_FINANCIERA", $value2)->pluck("NOMBRE_CUENTA_FINANCIERA", "ID_CUENTA_FINANCIERA");
+                $cuentas[$key][] = $cuenta;
+            }
+        }
+
+        return view('catalogo.configurarCatalogo');
+    }
+
+}   

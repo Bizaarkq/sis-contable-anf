@@ -54,6 +54,7 @@
 
         Route::get('/catalogo/crear','CatalogoController@create');
         Route::post('/catalogo/enviar','CatalogoController@store');
+        Route::get('/catalogo/configurar', 'CatalogoController@configurar')->name('catalogo.configurar');
     });
 
     
