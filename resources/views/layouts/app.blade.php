@@ -38,7 +38,7 @@
                     @endif
                 @endif
                 @endif
-                <li class="nav-item dropdown ">
+                {{-- <li class="nav-item dropdown ">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Contabilidad de Costos
                     </a>
@@ -47,7 +47,7 @@
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="/cost/generate">Generar Resultados</a></li>
                     </ul>
-                </li>
+                </li> --}}
                 <li class="nav-item dropdown ">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         Documentos Contables
@@ -63,6 +63,9 @@
                         <li><a class="dropdown-item" href="/item/create">Agregar Partida</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="/item/{{$month}}/JournalBook">Libro diario</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="/catalogo/crear">Crear catalogo</a></li>
+                        <li><a class="dropdown-item" href="/catalogo/configurar">Configurar Catalogo</a></li>
                     </ul>
                 </li>
             </ul>
