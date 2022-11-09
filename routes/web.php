@@ -51,6 +51,9 @@
         Route::post('/cost/resultados','CostController@result');
         Route::put('/cost/{cost}/update','CostController@update')->name("cost.update");
         Route::resource('/cost','CostController');
+
+        Route::get('/catalogo/crear','CatalogoController@create');
+        Route::post('/catalogo/enviar','CatalogoController@store');
     });
 
     

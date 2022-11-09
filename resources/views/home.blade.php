@@ -12,12 +12,12 @@
                 <i class="fas fa-file-alt mt-2" style="font-size:50px;"></i>
             </a>
         </div>
-        <div class="col-12 col-md-4 col-lg-3 col-xxl-2 d-flex justify-content-center">
+        {{-- <div class="col-12 col-md-4 col-lg-3 col-xxl-2 d-flex justify-content-center">
             <a type="submit" class="btn btn-primary mt-5 p-4 border-0 shadow rounded-" href="/cost/create">
                 <h5 class="fs-3">Agregar costos</h5>
                 <i class="fas fa-file-invoice-dollar mt-2" style="font-size:50px;"></i>
             </a>
-        </div>
+        </div> --}}
     </div>
 </div>
 @endsection
